@@ -1,0 +1,95 @@
+name: 'teks'
+
+on:
+  push:
+    branches:
+    - main
+    - release
+  pull_request:
+    branches:
+      - main
+      - release
+  workflow_dispatch:
+
+env:
+  GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+jobs:
+  terraform-pre-commit:
+    name: 'terraform:pre-commit'
+    runs-on: ubuntu-22.04
+    if: github.ref != 'refs/heads/release'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: 'asdf:install'
+      uses: asdf-vm/actions/install@v3
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version-file: '.python-version'
+
+    - name: Init tooling
+      run: |
+        tflint --init
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+    - name: Check modules
+      uses: pre-commit/action@v3.0.0
+      with:
+        extra_args: --show-diff-on-failure --all-files
+
+    - name: 'slack:failure'
+      if: failure()
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      uses: voxmedia/github-action-slack-notify-build@v2
+      with:
+        channel: ${{ secrets.SLACK_CHANNEL }}
+        status: failure
+        color: danger
+
+  terraform-release:
+    if: github.ref == 'refs/heads/release'
+    name: 'terraform:release'
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v2
+      with:
+        branches: |
+          [
+            'release'
+          ]
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 'slack:success'
+      if: success()
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      uses: voxmedia/github-action-slack-notify-build@v2
+      with:
+        channel: ${{ secrets.SLACK_CHANNEL }}
+        status: SUCCESS
+        color: good
+
+    - name: 'slack:failure'
+      if: failure()
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      uses: voxmedia/github-action-slack-notify-build@v2
+      with:
+        channel: ${{ secrets.SLACK_CHANNEL }}
+        status: failure
+        color: danger
