@@ -112,7 +112,7 @@ inputs = {
   # For this to work:
   # * GITHUB_TOKEN should be set
   flux2 = {
-    enabled    = true
+    enabled    = false
     path       = "gitops/clusters/${include.root.locals.merged.env}/${dependency.eks.outputs.cluster_name}"
     repository = "teks-gitops"
     branch     = "main"
