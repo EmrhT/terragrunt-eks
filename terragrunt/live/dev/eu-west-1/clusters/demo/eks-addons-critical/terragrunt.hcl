@@ -67,7 +67,7 @@ inputs = {
   }
 
   aws-ebs-csi-driver = {
-    enabled          = true
+    enabled          = false
     is_default_class = true
     wait             = false
     use_encryption   = true
@@ -75,7 +75,7 @@ inputs = {
   }
 
   aws-efs-csi-driver = {
-    enabled = true
+    enabled = false
   }
 
   aws-load-balancer-controller = {
@@ -87,12 +87,12 @@ inputs = {
   }
 
   csi-external-snapshotter = {
-    enabled = true
+    enabled = false
   }
 
   external-dns = {
     external-dns = {
-      enabled = true
+      enabled = false
     },
   }
 

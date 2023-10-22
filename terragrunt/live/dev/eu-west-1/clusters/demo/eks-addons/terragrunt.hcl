@@ -86,7 +86,7 @@ inputs = {
   }
 
   cert-manager = {
-    enabled                   = true
+    enabled                   = false
     acme_http01_enabled       = true
     acme_dns01_enabled        = true
     acme_http01_ingress_class = "nginx"
@@ -227,7 +227,7 @@ inputs = {
   }
 
   ingress-nginx = {
-    enabled       = true
+    enabled       = false
     use_nlb_ip    = true
     allowed_cidrs = dependency.vpc.outputs.intra_subnets_cidr_blocks
     extra_values  = <<-EXTRA_VALUES
