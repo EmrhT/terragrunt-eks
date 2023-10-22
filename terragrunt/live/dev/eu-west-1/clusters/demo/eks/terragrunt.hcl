@@ -170,7 +170,7 @@ inputs = {
     desired_size        = 1
     min_size            = 0
     max_size            = 100
-    capacity_type       = "ON_DEMAND"
+    capacity_type       = "SPOT"
     platform            = "bottlerocket"
     ami_release_version = "1.14.1-842c7134"
     iam_role_additional_policies = {
@@ -217,11 +217,11 @@ inputs = {
       desired_size               = 0
       min_size                   = 0
       ami_type                   = "BOTTLEROCKET_x86_64"
-      instance_types             = ["t3a.medium"]
+      instance_types             = ["t3.small"]
       subnet_ids                 = dependency.vpc.outputs.private_subnets
       enable_bootstrap_user_data = true
       bootstrap_extra_args       = <<-EOT
-        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t3a.large --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
+        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t3.small --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
         EOT
       labels = {
         network = "private"
@@ -235,11 +235,11 @@ inputs = {
 
     "default-a" = {
       ami_type                   = "BOTTLEROCKET_x86_64"
-      instance_types             = ["t3a.medium"]
+      instance_types             = ["t3.micro"]
       subnet_ids                 = [dependency.vpc.outputs.private_subnets[0]]
       enable_bootstrap_user_data = true
       bootstrap_extra_args       = <<-EOT
-        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t3a.medium --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
+        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t3.micro --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
         EOT
       labels = {
         network = "private"
@@ -248,11 +248,11 @@ inputs = {
 
     "default-b" = {
       ami_type                   = "BOTTLEROCKET_x86_64"
-      instance_types             = ["t3a.medium"]
+      instance_types             = ["t3.micro"]
       subnet_ids                 = [dependency.vpc.outputs.private_subnets[1]]
       enable_bootstrap_user_data = true
       bootstrap_extra_args       = <<-EOT
-        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t3a.medium --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
+        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t3.micro --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
         EOT
       labels = {
         network = "private"
@@ -262,55 +262,11 @@ inputs = {
     "default-c" = {
       ami_type                   = "BOTTLEROCKET_x86_64"
       platform                   = "bottlerocket"
-      instance_types             = ["t3a.medium"]
+      instance_types             = ["t3.micro"]
       subnet_ids                 = [dependency.vpc.outputs.private_subnets[2]]
       enable_bootstrap_user_data = true
       bootstrap_extra_args       = <<-EOT
-        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t3a.medium --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
-        EOT
-      labels = {
-        network = "private"
-      }
-    }
-
-    # Below are example pools for ARM64 instances.
-
-    "arm-a" = {
-      desired_size               = 0
-      ami_type                   = "BOTTLEROCKET_ARM_64"
-      instance_types             = ["t4g.medium"]
-      subnet_ids                 = [dependency.vpc.outputs.private_subnets[0]]
-      enable_bootstrap_user_data = true
-      bootstrap_extra_args       = <<-EOT
-        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t4g.medium --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
-        EOT
-      labels = {
-        network = "private"
-      }
-    }
-
-    "arm-b" = {
-      desired_size               = 0
-      ami_type                   = "BOTTLEROCKET_ARM_64"
-      instance_types             = ["t4g.medium"]
-      subnet_ids                 = [dependency.vpc.outputs.private_subnets[1]]
-      enable_bootstrap_user_data = true
-      bootstrap_extra_args       = <<-EOT
-        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t4g.medium --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
-        EOT
-      labels = {
-        network = "private"
-      }
-    }
-
-    "arm-c" = {
-      desired_size               = 0
-      ami_type                   = "BOTTLEROCKET_ARM_64"
-      instance_types             = ["t4g.medium"]
-      subnet_ids                 = [dependency.vpc.outputs.private_subnets[2]]
-      enable_bootstrap_user_data = true
-      bootstrap_extra_args       = <<-EOT
-        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t4g.medium --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
+        "max-pods" = ${run_cmd("/bin/sh", "-c", "../../../../../../../tools/max-pods-calculator.sh --instance-type t3.micro --cni-version ${local.aws_vpc_cni_version} --cni-prefix-delegation-enabled")}
         EOT
       labels = {
         network = "private"

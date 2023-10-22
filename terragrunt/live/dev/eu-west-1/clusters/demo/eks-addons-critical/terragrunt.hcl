@@ -96,10 +96,10 @@ inputs = {
     },
   }
 
-  karpenter = {
-    enabled      = false
-    iam_role_arn = dependency.eks.outputs.eks_managed_node_groups["unused"].iam_role_arn
-  }
+  # karpenter = {
+  #   enabled      = false
+  #   iam_role_arn = dependency.eks.outputs.eks_managed_node_groups["unused"].iam_role_arn
+  # }
 
   metrics-server = {
     enabled       = true
